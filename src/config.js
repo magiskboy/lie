@@ -5,8 +5,11 @@ const COVID19_STAT_URL =
 
 const NEWS_RSS = "https://vnexpress.net/rss";
 
+const YOUTUBE_API = "https://content-youtube.googleapis.com/youtube/v3/videos";
+
 module.exports = {
   WEATHER_API,
   COVID19_STAT_URL,
   NEWS_RSS,
+  YOUTUBE_API,
 };

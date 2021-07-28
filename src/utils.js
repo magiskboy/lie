@@ -76,8 +76,30 @@ async function getNews(topics) {
   }));
 }
 
+async function getYoutubeTrending(size, apiKey) {
+  const resp = await axios.get(config.YOUTUBE_API, {
+    params: {
+      chart: "mostPopular",
+      regionCode: "VN",
+      maxResults: size,
+      locale: "vi-VN",
+      part: "snippet",
+      key: apiKey,
+    },
+    headers: {
+      "x-origin": "https://explorer.apis.google.com",
+    },
+  });
+  return resp.data.items.map((item) => ({
+    title: item.snippet.title,
+    image: item.snippet.thumbnails.medium.url,
+    url: `https://youtube.com/watch?v=${item.id}`,
+  }));
+}
+
 module.exports = {
   getWeather,
   getNews,
   getCOVID19,
+  getYoutubeTrending,
 };

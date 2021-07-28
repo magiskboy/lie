@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start:cron": "node src/cron.js",
+    "start:bot": "echo Start bot"
   },
   "keywords": [],
   "author": "",
@@ -13,8 +14,11 @@
     "@slack/socket-mode": "^1.1.0",
     "@slack/web-api": "^6.3.0",
     "axios": "^0.21.1",
+    "cron": "^1.8.2",
     "csv": "^5.5.0",
-    "pm2": "^5.1.0",
     "rss-parser": "^3.12.0"
+  },
+  "devDependencies": {
+    "dotenv": "^10.0.0"
   }
 }
