@@ -15,17 +15,17 @@ const {
 
 const bot = new SlackBot({ botToken: process.env.SLACK_BOT_TOKEN });
 
-const getWeatherJob = new CronJob("0 */1 * * * *", () => {
+const getWeatherJob = new CronJob("0 0 */1 * * *", () => {
   bot.say("Get weather");
   bot.invoke(GET_WEATHER, ["Hanoi", "Thanh Hoa"]);
 });
 
-const getCOVID19Job = new CronJob("0 */4 * * * *", () => {
+const getCOVID19Job = new CronJob("0 0 */4 * * *", () => {
   bot.say("Get COVID19 statistics");
   bot.invoke(GET_COVID19_STAT, ["1", "38"]);
 });
 
-const getNewsJob = new CronJob("0 */8 * * * *", () => {
+const getNewsJob = new CronJob("0 0 */8 * * *", () => {
   bot.say("Get daily news");
   const topics = [
     { name: "Tin nổi bật", code: "tin-noi-bat" },
@@ -35,7 +35,7 @@ const getNewsJob = new CronJob("0 */8 * * * *", () => {
   bot.invoke(GET_NEWS, topics);
 });
 
-const getYoutubeTrendingJob = new CronJob("0 */8 * * * *", () => {
+const getYoutubeTrendingJob = new CronJob("0 0 */8 * * *", () => {
   bot.say("Get youtube trending");
   bot.invoke(GET_YOUTUBE_TRENDING);
 });
