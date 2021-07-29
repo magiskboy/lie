@@ -1,7 +1,7 @@
 const { WebClient } = require("@slack/web-api");
 const {
   getNews,
-  getCOVID19,
+  getCovidHanoi,
   getWeather,
   getYoutubeTrending,
 } = require("./utils");
@@ -109,21 +109,19 @@ class SlackBot {
   }
 
   async prepareCOVID19(channel, cities) {
-    const data = await getCOVID19(cities);
+    const data = await getCovidHanoi(cities);
     return {
       channel: channel,
       text: "COVID19",
-      blocks: data.map((item) => ({
-        type: "section",
-        text: {
-          type: "mrkdwn",
-          text: `*${item.city}*
-          Tổng số: ${item.total}
-          Nhiễm: ${item.infected}
-          Tử vong: ${item.died}
-          Khỏi: ${item.normal}`,
-        },
-      })),
+      blocks: data
+        .filter((item) => Number.isInteger(item.total))
+        .map((item) => ({
+          type: "section",
+          text: {
+            type: "mrkdwn",
+            text: `${item.name}\nSố ca nhiễm: ${item.total}\n${item.detail}`,
+          },
+        })),
     };
   }
 

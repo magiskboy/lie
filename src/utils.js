@@ -1,6 +1,6 @@
 const axios = require("axios");
-const csv = require("csv");
 const Parser = require("rss-parser");
+const parse = require("node-html-parser").parse;
 const config = require("./config");
 
 async function getWeather(locations, apiKey) {
@@ -32,33 +32,6 @@ async function getWeather(locations, apiKey) {
         name: item.location.name,
         country: item.location.country,
       },
-    }));
-}
-
-function parseCSV(data) {
-  return new Promise((resolve, reject) => {
-    csv.parse(
-      data,
-      { columns: true, skip_empty_lines: true },
-      (error, output) => {
-        if (error) reject(error);
-        else resolve(output);
-      }
-    );
-  });
-}
-
-async function getCOVID19(cities) {
-  const resp = await axios.get(config.COVID19_STAT_URL);
-  const records = await parseCSV(resp.data);
-  return records
-    .filter((item) => cities.includes(item.KEY))
-    .map((item) => ({
-      city: item["TỈNH THÀNH"] || 0,
-      infected: item["NHIỄM"] || 0,
-      died: item["TỬ VONG"] || 0,
-      normal: item["KHỎI"] || 0,
-      total: item["TỔNG"] || 0,
     }));
 }
 
@@ -97,9 +70,51 @@ async function getYoutubeTrending(size, apiKey) {
   }));
 }
 
+async function getCovidHanoi() {
+  const resp = await axios.get(
+    "https://soyte.hanoi.gov.vn/tin-tuc-su-kien-noi-bat/-/asset_publisher/4IVkx5Jltnbg/content/cap-nhat-tinh-hinh-dich-benh-covid-19-tai-thanh-pho-ha-noi"
+  );
+  const html = parse(resp.data);
+  return [
+    {
+      name: "Sáng",
+      total: parseInt(
+        html.querySelector(
+          "#_101_INSTANCE_4IVkx5Jltnbg_5876672 > div.journal-content-article > table.Table > tbody > tr:nth-child(4) > td:nth-child(2) > p"
+        ).textContent
+      ),
+      detail: html.querySelector(
+        "#_101_INSTANCE_4IVkx5Jltnbg_5876672 > div.journal-content-article > table.Table > tbody > tr:nth-child(4) > td:nth-child(3) > p"
+      ).textContent,
+    },
+    {
+      name: "Trưa",
+      total: parseInt(
+        html.querySelector(
+          "#_101_INSTANCE_4IVkx5Jltnbg_5876672 > div.journal-content-article > table.Table > tbody > tr:nth-child(5) > td:nth-child(2) > p"
+        ).textContent
+      ),
+      detail: html.querySelector(
+        "#_101_INSTANCE_4IVkx5Jltnbg_5876672 > div.journal-content-article > table.Table > tbody > tr:nth-child(5) > td:nth-child(3) > p"
+      ).textContent,
+    },
+    {
+      name: "Tối",
+      total: parseInt(
+        html.querySelector(
+          "#_101_INSTANCE_4IVkx5Jltnbg_5876672 > div.journal-content-article > table.Table > tbody > tr:nth-child(6) > td:nth-child(2) > p"
+        ).textContent
+      ),
+      detail: html.querySelector(
+        "#_101_INSTANCE_4IVkx5Jltnbg_5876672 > div.journal-content-article > table.Table > tbody > tr:nth-child(6) > td:nth-child(3) > p"
+      ).textContent,
+    },
+  ];
+}
+
 module.exports = {
   getWeather,
   getNews,
-  getCOVID19,
+  getCovidHanoi,
   getYoutubeTrending,
 };

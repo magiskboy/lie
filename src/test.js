@@ -5,7 +5,7 @@ if (dev) {
 }
 
 const { SlackBot } = require("./bot");
-const { GET_YOUTUBE_TRENDING } = require("./commands");
+const { GET_COVID19_STAT } = require("./commands");
 
 const bot = new SlackBot({ botToken: process.env.SLACK_BOT_TOKEN });
-bot.invoke(GET_YOUTUBE_TRENDING);
+bot.invoke(GET_COVID19_STAT);
